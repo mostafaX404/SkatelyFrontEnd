@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+// @use '@angular/material' as mat;
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// $primary: mat.define-palette(mat.$indigo-palette);
+// $accent: mat.define-palette(mat.$pink-palette, 200);
+// $warn: mat.define-palette(mat.$red-palette);
+
+// $customTheme: mat.define-light-theme($primary, $accent, $warn);
+
+// @include mat.core();
+
+
+
+// .custom-theme {
+//     @include mat.all-component-themes($customTheme);
+
+//     .mdc-button,
+//     .mdc-raised-button,
+//     .mdc-stroked-button,
+//     .mdc-flat-button {
+//         @apply rounded-md
+//     }
+// }
+
+
+
+.container {
+
+    margin-left: 30px;
+}
+
+
+.text-primary {
+    color: #7d00fa
+}
+
+button.march-input-height {
+    height: var(--mat-form-field-container-height) !important;
+}
+
+.mdc-notched-outline__notch {
+    border-right-style: none !important;
+}
+
+
+.mat-mdc-snack-bar-container.snack-error {
+
+
+    --mdc-snackbar-container-color: rgb(219, 59, 59);
+    --mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+
+}
+
+.mat-mdc-snack-bar-container.snack-success {
+
+
+    --mdc-snackbar-container-color: green;
+    --mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+
+}
