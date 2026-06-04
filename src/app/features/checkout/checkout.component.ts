@@ -15,6 +15,8 @@ import { CheckoutReview } from "./checkout-review/checkout-review";
 import { CurrencyPipe, JsonPipe } from '@angular/common'; // تم إضافة JsonPipe لعرض حالة الاكتمال في pre
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
+import { OrderService } from '../../core/services/order-service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -32,25 +34,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './checkout.component.scss'
 })
 
-export class CheckoutComponent implements OnInit ,OnDestroy{
-  
+export class CheckoutComponent implements OnInit, OnDestroy {
+
   private stripeService = inject(StripeService);
   private snackbar = inject(SnackbarService);
   private accountService = inject(AccountService)
+  private orderService = inject(OrderService)
   cartService = inject(CartService);
   private router = inject(Router)
   loading? = false;
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
   saveAddress = false;
-    private cd = inject(ChangeDetectorRef);
-  confirmationToken? : ConfirmationToken;
+  private cd = inject(ChangeDetectorRef);
+  confirmationToken?: ConfirmationToken;
 
-  completionStatus = signal<{address: boolean, card: boolean, delivery: boolean}>(
-    {address: false, card: false, delivery: false}
+  completionStatus = signal<{ address: boolean, card: boolean, delivery: boolean }>(
+    { address: false, card: false, delivery: false }
   )
 
- 
+
   constructor() {
     this.handleAddressChange = this.handleAddressChange.bind(this);
     this.handlePaymentChange = this.handlePaymentChange.bind(this);
@@ -65,7 +68,7 @@ export class CheckoutComponent implements OnInit ,OnDestroy{
 
       this.paymentElement = await this.stripeService.createPaymentElement();
       this.paymentElement.mount('#payment-element');
-    
+
       this.paymentElement.on('change', this.handlePaymentChange);
 
     } catch (error: any) {
@@ -73,21 +76,21 @@ export class CheckoutComponent implements OnInit ,OnDestroy{
     }
   }
 
-  
+
   handleAddressChange = (event: StripeAddressElementChangeEvent) => {
-    
-      this.completionStatus.update(state => {
-        state.address = event.complete;
-        return state;
-      
+
+    this.completionStatus.update(state => {
+      state.address = event.complete;
+      return state;
+
     });
   }
 
   handlePaymentChange = (event: StripePaymentElementChangeEvent) => {
-      this.completionStatus.update(state => {
-        state.card = event.complete;
-        return state;
-      
+    this.completionStatus.update(state => {
+      state.card = event.complete;
+      return state;
+
     });
   }
 
@@ -101,64 +104,99 @@ export class CheckoutComponent implements OnInit ,OnDestroy{
   }
 
   async getConfirmationToken() {
-  try {
-    if (Object.values(this.completionStatus()).every(status => status === true)) {
-      const result = await this.stripeService.createConfirmationToken();
-      if (result.error) throw new Error(result.error.message);
-      this.confirmationToken = result.confirmationToken;
-      console.log(`checkoutComponent/getConfirmationToken , confirmationToken = ${this.confirmationToken}`);
+    try {
+      if (Object.values(this.completionStatus()).every(status => status === true)) {
+        const result = await this.stripeService.createConfirmationToken();
+        if (result.error) throw new Error(result.error.message);
+        this.confirmationToken = result.confirmationToken;
+        console.log(`checkoutComponent/getConfirmationToken , confirmationToken = ${this.confirmationToken}`);
+      }
+    } catch (error: any) {
+      this.snackbar.error(error.message);
     }
-  } catch (error: any) {
-    this.snackbar.error(error.message);
   }
-}
 
   async onStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === 1) {
       if (this.saveAddress) {
-        const address = await this.getAddressFromStripeAddress();
+        const address = await this.getAddressFromStripeAddress() as Address;
         address && firstValueFrom(this.accountService.updateAddress(address));
       }
-      }
-        if(event.selectedIndex === 2){
-        await firstValueFrom(this.stripeService.createOrUpdatePaymentIntent())
-      }
-     
-     if(event.selectedIndex == 3){
-        console.log('entering confirmation');
+    }
+    if (event.selectedIndex === 2) {
+      await firstValueFrom(this.stripeService.createOrUpdatePaymentIntent())
+    }
+
+    if (event.selectedIndex == 3) {
+      console.log('entering confirmation');
       await this.getConfirmationToken();
     }
   }
 
-async confirmPayment(stepper: MatStepper) {
-  this.loading=true;
-  try {
-    if (this.confirmationToken) {
-      const result = await this.stripeService.confirmPayment(this.confirmationToken);
-      console.log(`inside confirmPayment Method in checkout , confirm token is ${this.confirmationToken}`)
-      if (result.error) {
-        throw new Error(result.error.message);
-      } else {
-        this.cartService.deleteCart();
-        this.cartService.selectedDelivery.set(null);
-        this.router.navigateByUrl('/checkout/success');
+  async confirmPayment(stepper: MatStepper) {
+    this.loading = true;
+    try {
+      if (this.confirmationToken) {
+        const result = await this.stripeService.confirmPayment(this.confirmationToken);
+
+        if (result.paymentIntent?.status === 'succeeded') {
+          const order = await this.createOrderModel();
+          const orderResult = await firstValueFrom(this.orderService.createOrder(order));
+
+          if (orderResult) {
+            this.orderService.orderComplete = true ;
+            this.cartService.deleteCart();
+            this.cartService.selectedDelivery.set(null);
+            this.router.navigateByUrl('/checkout/success');
+          } else {
+            throw new Error('Order creation failed');
+          }
+        } else if (result.error) {
+          throw new Error(result.error.message);
+        } else {
+          throw new Error('Something went wrong');
+        }
+
       }
+    } catch (error: any) {
+      this.snackbar.error(error.message || 'Something went wrong');
+      stepper.previous();
+    } finally {
+      this.loading = false;
     }
-  } catch (error: any) {
-    this.snackbar.error(error.message || 'Something went wrong');
-    stepper.previous();
-  }finally{
-    this.loading =false;
   }
-}
 
 
-  private async getAddressFromStripeAddress(): Promise<Address | null> {
+  private async createOrderModel(): Promise<OrderToCreate> {
+    const cart = this.cartService.cart();
+    const shippingAddress = await this.getAddressFromStripeAddress() as ShippingAddress;
+    const card = this.confirmationToken?.payment_method_preview.card;
+
+    if (!cart?.id || !cart.deliveryMethodId || !card || !shippingAddress) {
+      throw new Error('Problem creating order');
+    }
+
+    return {
+      cartId: cart.id,
+      paymentSummary: {
+        last4: +card.last4,
+        brand: card.brand,
+        expMonth: card.exp_month,
+        expYear: card.exp_year
+      },
+      deliveryMethodId: cart.deliveryMethodId,
+      shippingAddress: shippingAddress
+    };
+  }
+
+
+  private async getAddressFromStripeAddress(): Promise<Address | ShippingAddress | null> {
     const result = await this.addressElement?.getValue();
     const address = result?.value.address;
 
     if (address) {
       return {
+        name: result.value.name,
         line1: address.line1,
         line2: address.line2 || undefined,
         city: address.city,
