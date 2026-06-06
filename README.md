@@ -2,7 +2,7 @@
 
 Skately is the client-facing web application for a full-stack e-commerce platform. Users can browse products, manage a shopping cart, complete Stripe-powered checkout, track orders, and receive real-time order updates. Administrators can review and refund orders from a dedicated dashboard.
 
-This Angular SPA communicates with the [Skately API](../Backend/README.md) over HTTPS and uses cookie-based authentication.
+This Angular SPA communicates with the [Skately API](https://github.com/mostafaX404/SkatelyBackEnd) over HTTPS and uses cookie-based authentication.
 
 ---
 
