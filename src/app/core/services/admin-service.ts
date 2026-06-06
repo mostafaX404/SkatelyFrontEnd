@@ -19,7 +19,7 @@ export class AdminService {
       var params = new HttpParams();
 
       if(orderparams.filter && orderparams.filter !=='All'){
-        params = params.append('filter',orderparams.filter);
+        params = params.append('status',orderparams.filter);
       }
 
       params = params.append('pageIndex',orderparams.pageNumber);
@@ -30,11 +30,11 @@ export class AdminService {
 
 
     getOrder(id:number){
-      return this.http.get<Order>(this.baseUrl+'admin/orders/'+id)
+      return this.http.get<Order>(this.baseUrl+'admin/order/'+id)
     }
 
 
     refundOrder(id:number){
-      return this.http.post<Order>(this.baseUrl+'admin/refund/'+id,{})
+      return this.http.post<Order>(this.baseUrl+'admin/orders/refund/'+id,{})
     }
 }

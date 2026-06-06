@@ -3,7 +3,7 @@
 <div class="flex flex-col gap-3">
     <div class="flex justify-between">
 
-        <mat-paginator class="bg-white" (page)="handlePageEvent($event)" [length]="Products.value.count"
+        <mat-paginator class="bg-white" (page)="handlePageEvent($event)" [length]="Products.count"
             showFirstLastButtons="true" [pageSizeOptions]="pageSizeOptions" [pageIndex]="shopParams.pageNumber -1"
             aria-label="Select page">
 
@@ -38,7 +38,7 @@
     </div>
 
     <div class="grid grid-cols-5 gap-4">
-        @for (prod of Products.value.data; track prod.id) {
+        @for (prod of Products.data; track prod.id) {
 
         <app-product-item [product]="prod"></app-product-item>
 

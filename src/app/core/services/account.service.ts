@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, inject, Inject, Injectable, signal } from '@angular/core';
 import { Address, User } from '../../shared/models/user';
-import { map, tap } from 'rxjs';
+import { catchError, map, of, tap } from 'rxjs';
 import { SignalrService } from './signalr-service';
 
 @Injectable({
@@ -16,9 +16,9 @@ export class AccountService {
   private signalrService = inject(SignalrService)
   currentUser = signal<User | null>(null);
   
-  isAdmin = computed(()=>{
-    const roles = this.currentUser()?.role ; 
-    return Array.isArray(roles) ? roles.includes("Admin") : roles == "Admin";
+  isAdmin = computed(() => {
+    const roles = this.currentUser()?.roles;
+    return Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
   })
 
 
@@ -44,12 +44,16 @@ login(values: any) {
 
 
   getUserInfo() {
-    return this.http.get<User>(this.baseUrl + 'account/user-info').pipe(map(
-      user => {
+    return this.http.get<User>(this.baseUrl + 'account/user-info').pipe(
+      map(user => {
         this.currentUser.set(user);
         return user;
-      }
-    ))
+      }),
+      catchError(() => {
+        this.currentUser.set(null);
+        return of(null);
+      })
+    );
   }
 
 

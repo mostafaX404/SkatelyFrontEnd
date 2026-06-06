@@ -47,13 +47,8 @@ export class AdminComponent implements OnInit {
   loadOrders(): void {
     this.adminService.getOrders(this.orderParams).subscribe({
       next: response => {
-        console.log('API Response:', response);
-        if (response.value.data) {
-          this.dataSource.data = response.value.data;
-          this.totalItems = response.value.count;
-        } else {
-          console.error('Invalid response data', response);
-        }
+        this.dataSource.data = response.data ?? [];
+        this.totalItems = response.count ?? 0;
       },
       error: err => console.error('Error fetching orders', err)
     });
