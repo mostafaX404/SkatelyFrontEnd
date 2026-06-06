@@ -1,41 +1,82 @@
-<div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm mb-4">
-    <div class="flex items-center justify-between gap-6">
-        <a routerLink="/shop/{{item().productId}}" class="shrink order-1">
-        </a>
-        <img src="{{item().pictureUrl}}" alt="product image" class="h-20 w-20">
-        <div class="flex items-center justify-between order-3">
-            <div class="flex items-center align-middle gap-3">
+<div class="card card-body">
 
-                <button mat-icon-button (click)="decrementQuantity()">
-                    <mat-icon class="text-red-600">remove</mat-icon>
-                </button>
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
 
-                <div class="font-semibold text-xl mb-1">{{item().quantity}}</div>
-                <button mat-icon-button (click)="incrementQuantity()">
-                    <mat-icon class="text-red-600">add</mat-icon>
-                </button>
-            </div>
+    <a routerLink="/shop/{{item().productId}}" class="shrink-0">
 
-            <div class="text-end order-4 w-32">
-                <p class="font-bold text-xl"> {{item().price | currency}}</p>
-            </div>
+      <img src="{{item().pictureUrl}}" alt="product image" class="h-24 w-24 object-cover rounded-lg border border-gray-100">
+
+    </a>
 
 
-        </div>
 
-        <div class="w-full flex-1 space-y-4 order-2 max-w-md">
-            <a routerLink="/shop/{{item().productId}}" class="font-medium">
-                {{item().productName}}
-            </a>
+    <div class="flex-1 min-w-0 space-y-2">
 
-            <div class="flex items-center gap-4">
+      <a routerLink="/shop/{{item().productId}}" class="font-medium text-gray-900 hover:text-primary transition-colors line-clamp-2">
 
-                <button mat-button color="warn" (click)="removeItemFromCart()">
-                    <mat-icon>delete</mat-icon>
-                    Delete
-                </button>
+        {{item().productName}}
 
-            </div>
-        </div>
+      </a>
+
+
+
+      <button mat-button (click)="removeItemFromCart()" class="btn-danger !px-2 !min-w-0">
+
+        <mat-icon>delete_outline</mat-icon>
+
+        Remove
+
+      </button>
+
     </div>
+
+
+
+    <div class="qty-control sm:mx-2">
+
+      <button
+
+        mat-icon-button
+
+        class="btn-qty-minus"
+
+        (click)="decrementQuantity()"
+
+        aria-label="Decrease quantity">
+
+        <mat-icon>remove</mat-icon>
+
+      </button>
+
+      <span class="qty-display">{{item().quantity}}</span>
+
+      <button
+
+        mat-icon-button
+
+        class="btn-qty-plus"
+
+        (click)="incrementQuantity()"
+
+        aria-label="Increase quantity">
+
+        <mat-icon>add</mat-icon>
+
+      </button>
+
+    </div>
+
+
+
+    <div class="text-end sm:w-28 shrink-0">
+
+      <p class="text-xs text-gray-500 uppercase tracking-wide">Line total</p>
+
+      <p class="font-bold text-lg price-highlight">{{item().price | currency}}</p>
+
+    </div>
+
+  </div>
+
 </div>
+

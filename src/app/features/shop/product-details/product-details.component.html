@@ -1,44 +1,66 @@
 @if (product) {
+  <section class="page-container py-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+      <div class="card overflow-hidden">
+        <img class="w-full object-cover" src="{{product.pictureUrl}}" alt="product image">
+      </div>
 
-<section class="py-8">
-    <div class="max-w-screen-2xl px-4 mx-auto">
-        <div class="grid grid-cols-2 gap-8">
-            <div class="max-w-xl mx-auto">
-                <img class="w-full" src="{{product.pictureUrl}}" alt="product image">
+      <div class="space-y-5">
+        <h1 class="text-3xl font-semibold text-gray-900">{{product.name}}</h1>
+
+        @if (quantityInCart > 0) {
+          <span class="in-cart-badge">
+            <mat-icon class="!text-base !w-4 !h-4">check_circle</mat-icon>
+            {{quantityInCart}} in your cart
+          </span>
+        }
+
+        <p class="text-3xl font-extrabold price-highlight">
+          {{product.price | currency}}
+        </p>
+
+        <div class="space-y-3">
+          <p class="text-sm font-medium text-gray-700">Quantity</p>
+          <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div class="qty-control">
+              <button
+                mat-icon-button
+                class="btn-qty-minus"
+                (click)="decrementQty()"
+                [disabled]="quantity <= 0"
+                aria-label="Decrease quantity">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="qty-display">{{quantity}}</span>
+              <button
+                mat-icon-button
+                class="btn-qty-plus"
+                (click)="incrementQty()"
+                aria-label="Increase quantity">
+                <mat-icon>add</mat-icon>
+              </button>
             </div>
 
-            <div>
-                <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
-
-                <p>You have {{quantityInCart}} of this in your cart</p>
-
-                <div class="mt-4 items-center gap-4 flex">
-                    <p class="text-3xl font-extrabold text-gray-900">
-                        {{product.price|currency}}
-                    </p>
-                </div>
-
-                <div class="flex gap-4 mt-6">
-                    <button [disabled]="quantity === quantityInCart" (click)="updateCart()" mat-flat-button
-                        class="march-input-height">
-                        <mat-icon>shopping_cart</mat-icon>
-                        {{getButtonText()}}
-                    </button>
-
-                    <mat-form-field appearance="outline" class="flex">
-                        <mat-label>Quantity</mat-label>
-                        <input matInput [(ngModel)]="quantity" type="number" min="0">
-                    </mat-form-field>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <p class="mt-6 text-gray-500">
-                    {{product.description}}
-                </p>
-            </div>
+            <button
+              [disabled]="quantity === quantityInCart"
+              (click)="updateCart()"
+              mat-flat-button
+              class="btn-success-filled march-input-height sm:flex-1">
+              <mat-icon>shopping_cart</mat-icon>
+              {{getButtonText()}}
+            </button>
+          </div>
         </div>
-    </div>
-</section>
 
+        <mat-divider></mat-divider>
+
+        <div>
+          <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-2">Description</h2>
+          <p class="text-gray-600 leading-relaxed">
+            {{product.description}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 }

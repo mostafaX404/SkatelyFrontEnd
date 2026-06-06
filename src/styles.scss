@@ -5,62 +5,281 @@
 @tailwind components;
 @tailwind utilities;
 
-// $primary: mat.define-palette(mat.$indigo-palette);
-// $accent: mat.define-palette(mat.$pink-palette, 200);
-// $warn: mat.define-palette(mat.$red-palette);
-
-// $customTheme: mat.define-light-theme($primary, $accent, $warn);
-
-// @include mat.core();
-
-
-
-// .custom-theme {
-//     @include mat.all-component-themes($customTheme);
-
-//     .mdc-button,
-//     .mdc-raised-button,
-//     .mdc-stroked-button,
-//     .mdc-flat-button {
-//         @apply rounded-md
-//     }
-// }
-
-
-
-.container {
-
-    margin-left: 30px;
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
 }
 
+// Prevent Tailwind preflight from stripping Material button outlines
+button.mat-mdc-button-base {
+  border-style: solid;
+}
+
+@layer components {
+  .page-container {
+    @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-xl border border-gray-200 bg-white shadow-card;
+  }
+
+  .card-body {
+    @apply p-5 sm:p-6;
+  }
+
+  .step-actions {
+    @apply flex justify-between items-center gap-4 mt-6 pt-5 border-t border-gray-100;
+  }
+
+  .btn-primary-lg {
+    @apply min-w-[140px] px-6;
+  }
+
+  .qty-control {
+    @apply inline-flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1;
+  }
+
+  .qty-display {
+    @apply min-w-[2.5rem] text-center font-semibold text-lg text-gray-900 px-2 select-none;
+  }
+
+  .in-cart-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-success-light text-success px-3 py-1 text-sm font-medium;
+  }
+
+  .price-highlight {
+    @apply text-primary font-bold;
+  }
+}
+
+// Green + quantity button
+.btn-qty-plus.mat-mdc-icon-button {
+  --mdc-icon-button-icon-color: #16a34a;
+
+  background-color: #dcfce7 !important;
+  border: 1.5px solid #86efac !important;
+
+  &:not(:disabled):hover {
+    background-color: #bbf7d0 !important;
+    border-color: #22c55e !important;
+  }
+}
+
+// Red - quantity button
+.btn-qty-minus.mat-mdc-icon-button {
+  --mdc-icon-button-icon-color: #dc2626;
+
+  background-color: #fee2e2 !important;
+  border: 1.5px solid #fca5a5 !important;
+
+  &:not(:disabled):hover {
+    background-color: #fecaca !important;
+    border-color: #ef4444 !important;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+  }
+}
+
+// Red remove / delete action
+.btn-danger.mat-mdc-button {
+  --mdc-text-button-label-text-color: #dc2626;
+
+  border: 1.5px solid transparent !important;
+
+  .mat-icon {
+    color: #dc2626;
+  }
+
+  &:not(:disabled):hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+}
+
+// Green add-to-cart / success action
+.btn-success.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-color: #86efac;
+  --mdc-outlined-button-label-text-color: #15803d;
+
+  background-color: #f0fdf4 !important;
+
+  .mdc-button__outline {
+    border-color: #86efac !important;
+  }
+
+  &:not(:disabled):hover {
+    --mdc-outlined-button-outline-color: #22c55e;
+    --mdc-outlined-button-label-text-color: #166534;
+    background-color: #dcfce7 !important;
+
+    .mdc-button__outline {
+      border-color: #22c55e !important;
+    }
+  }
+}
+
+.btn-success-filled.mat-mdc-unelevated-button {
+  --mdc-filled-button-container-color: #16a34a;
+  --mdc-filled-button-label-text-color: #fff;
+
+  border: 1.5px solid #15803d !important;
+  box-shadow: 0 1px 3px rgba(22, 163, 74, 0.2) !important;
+
+  &:not(:disabled):hover {
+    --mdc-filled-button-container-color: #15803d;
+    border-color: #166534 !important;
+    box-shadow: 0 3px 8px rgba(22, 163, 74, 0.28) !important;
+  }
+
+  &:disabled {
+    --mdc-filled-button-container-color: #e5e7eb;
+    --mdc-filled-button-label-text-color: #9ca3af;
+    border: 1.5px solid #d1d5db !important;
+    box-shadow: none !important;
+  }
+}
+
+// Green apply / confirm secondary action
+.btn-apply.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-color: #86efac;
+  --mdc-outlined-button-label-text-color: #16a34a;
+
+  .mdc-button__outline {
+    border-color: #86efac !important;
+  }
+
+  &:not(:disabled):hover {
+    background-color: #f0fdf4 !important;
+
+    .mdc-button__outline {
+      border-color: #22c55e !important;
+    }
+  }
+}
+
+// Cart badge in header
+.cart-link .mat-badge-content {
+  background: #16a34a !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+// Selected delivery option
+.delivery-option {
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &.delivery-selected {
+    border-color: #86efac !important;
+    background-color: #f0fdf4 !important;
+    box-shadow: 0 0 0 1px #bbf7d0;
+  }
+}
+
+.container {
+  @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8;
+}
 
 .text-primary {
-    color: #7d00fa
+  color: #7d00fa;
 }
 
 button.march-input-height {
-    height: var(--mat-form-field-container-height) !important;
+  height: var(--mat-form-field-container-height) !important;
 }
 
 .mdc-notched-outline__notch {
-    border-right-style: none !important;
+  border-right-style: none !important;
 }
 
+// Tailwind preflight resets button borders — restore smooth outlines for Material buttons
+.mat-mdc-button-base {
+  border-radius: 8px !important;
+  letter-spacing: 0.01em;
+}
+
+.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-width: 1.5px;
+  --mdc-outlined-button-outline-color: #d1d5db;
+  --mat-outlined-button-state-layer-color: #7d00fa;
+  --mdc-outlined-button-label-text-color: #374151;
+
+  &:not(:disabled):hover {
+    --mdc-outlined-button-outline-color: #7d00fa;
+    --mdc-outlined-button-label-text-color: #7d00fa;
+    background-color: rgba(125, 0, 250, 0.04) !important;
+  }
+
+  .mdc-button__outline {
+    border-width: 1.5px !important;
+    border-color: #d1d5db !important;
+    border-radius: 8px !important;
+  }
+
+  &:not(:disabled):hover .mdc-button__outline {
+    border-color: #7d00fa !important;
+  }
+}
+
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button {
+  --mdc-filled-button-container-color: #7d00fa;
+  --mdc-filled-button-label-text-color: #fff;
+  border: 1.5px solid #6b00d4 !important;
+  box-shadow: 0 1px 2px rgba(107, 0, 212, 0.15);
+
+  &:not(:disabled):hover {
+    border-color: #5a00b3 !important;
+    box-shadow: 0 2px 6px rgba(107, 0, 212, 0.2);
+  }
+
+  &:disabled {
+    border: 1.5px solid #e5e7eb !important;
+    opacity: 0.65;
+  }
+}
+
+.mat-mdc-button:not(.mat-mdc-icon-button) {
+  --mdc-text-button-label-text-color: #374151;
+  border: 1.5px solid transparent !important;
+
+  &:not(:disabled):hover {
+    border-color: #e5e7eb !important;
+    background-color: #f9fafb !important;
+  }
+}
+
+.mat-mdc-icon-button {
+  border: 1.5px solid transparent !important;
+  border-radius: 8px !important;
+
+  &:not(:disabled):hover {
+    border-color: #e5e7eb !important;
+    background-color: #f9fafb !important;
+  }
+}
 
 .mat-mdc-snack-bar-container.snack-error {
-
-
-    --mdc-snackbar-container-color: rgb(219, 59, 59);
-    --mdc-snack-bar-button-color: #fff;
-    --mdc-snackbar-supporting-text-color: #fff;
-
+  --mdc-snackbar-container-color: rgb(219, 59, 59);
+  --mdc-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
 }
 
 .mat-mdc-snack-bar-container.snack-success {
+  --mdc-snackbar-container-color: green;
+  --mdc-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
 
+.mat-horizontal-stepper-header-container {
+  padding: 0 1.5rem;
+}
 
-    --mdc-snackbar-container-color: green;
-    --mdc-snack-bar-button-color: #fff;
-    --mdc-snackbar-supporting-text-color: #fff;
+.mat-horizontal-content-container {
+  padding: 1.5rem !important;
+}
 
+.mat-mdc-form-field {
+  width: 100%;
 }

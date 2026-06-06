@@ -1,28 +1,38 @@
-<div class="mt-4 w-full">
-  <h4 class="text-lg font-semibold">Billing and delivery information</h4>
-  <dl>
-    <dt class="font-medium">Shipping address</dt>
-    <dd class="mt-1 text-gray-500">{{this.confirmationToken?.shipping | address}}</dd>
-    <dt class="font-medium">Payment details</dt>
-    <dd class="mt-1 text-gray-500">{{ confirmationToken?.payment_method_preview?.card| card }}</dd>
-  </dl>
-</div>
+<div class="space-y-6">
+  <div>
+    <h4 class="text-lg font-semibold text-gray-900 mb-3">Billing and delivery information</h4>
+    <dl class="space-y-3 text-sm">
+      <div>
+        <dt class="font-medium text-gray-700">Shipping address</dt>
+        <dd class="mt-1 text-gray-500">{{this.confirmationToken?.shipping | address}}</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-700">Payment details</dt>
+        <dd class="mt-1 text-gray-500">{{ confirmationToken?.payment_method_preview?.card | card }}</dd>
+      </div>
+    </dl>
+  </div>
 
-<div class="mt-6 mx-auto">
-  <div class="border-b border-gray-200">
-    <table class="w-full text-center">
-      <tbody class="divide-y divide-gray-200">
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          <th class="py-3 px-4 text-left font-medium text-gray-600">Product</th>
+          <th class="py-3 px-4 text-center font-medium text-gray-600">Qty</th>
+          <th class="py-3 px-4 text-right font-medium text-gray-600">Price</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
         @for (item of cartService.cart()?.items; track item.productId) {
           <tr>
-            <td class="py-4">
-              <div class="flex items-center gap-4">
-                <img src="{{item.pictureUrl}}" alt="product image"
-                     class="w-10 h-10">
-                <span>{{item.productName}}</span>
+            <td class="py-4 px-4">
+              <div class="flex items-center gap-3">
+                <img src="{{item.pictureUrl}}" alt="product image" class="w-12 h-12 object-cover rounded-md border border-gray-100">
+                <span class="font-medium text-gray-900">{{item.productName}}</span>
               </div>
             </td>
-            <td class="p-4">x{{item.quantity}}</td>
-            <td class="p-4 text-right">x{{item.price | currency}}</td>
+            <td class="py-4 px-4 text-center text-gray-600">×{{item.quantity}}</td>
+            <td class="py-4 px-4 text-right font-medium text-gray-900">{{item.price | currency}}</td>
           </tr>
         }
       </tbody>

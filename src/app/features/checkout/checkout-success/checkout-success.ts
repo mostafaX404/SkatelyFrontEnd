@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { SignalrService } from '../../../core/services/signalr-service';
 import { OrderService } from '../../../core/services/order-service';
 import { MatButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -12,6 +13,7 @@ import { CardPipe } from '../../../shared/pipes/card-pipe';
   selector: 'app-checkout-success',
   imports: [
     MatButton,
+    MatIconModule,
     RouterLink,
     MatProgressSpinnerModule,
     DatePipe,

@@ -67,7 +67,17 @@ constructor() {
     return this.quantityInCart > 0 ? 'Update cart' : 'Add to cart'
   }
 
-updateCart() {
+  incrementQty() {
+    this.quantity++;
+  }
+
+  decrementQty() {
+    if (this.quantity > 0) {
+      this.quantity--;
+    }
+  }
+
+  updateCart() {
   if (!this.product) return;
 
   const diff = this.quantity - this.quantityInCart;

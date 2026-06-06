@@ -1,0 +1,97 @@
+:host ::ng-deep {
+  .checkout-stepper {
+    overflow: visible;
+
+    &.card {
+      overflow: visible;
+    }
+  }
+
+  .mat-stepper-horizontal {
+    background: transparent;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .mat-horizontal-stepper-header-container {
+    background: #fafafa;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .mat-horizontal-content-container {
+    overflow: visible;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .step-actions {
+    overflow: visible;
+    padding-bottom: 0.25rem;
+
+    .step-btn {
+      min-height: 44px !important;
+      min-width: 120px !important;
+      padding: 0 1.5rem !important;
+      border-radius: 10px !important;
+      font-weight: 500 !important;
+      font-size: 0.9375rem !important;
+      letter-spacing: 0.01em;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    }
+
+    .step-btn-outline.mat-mdc-outlined-button {
+      --mdc-outlined-button-outline-width: 1.5px;
+      --mdc-outlined-button-outline-color: #c9c9d1;
+      --mdc-outlined-button-label-text-color: #374151;
+      background-color: #fff !important;
+
+      .mdc-button__outline {
+        border-width: 1.5px !important;
+        border-color: #c9c9d1 !important;
+        border-radius: 10px !important;
+      }
+
+      &:not(:disabled):hover {
+        --mdc-outlined-button-outline-color: #7d00fa;
+        --mdc-outlined-button-label-text-color: #7d00fa;
+        background-color: #faf5ff !important;
+
+        .mdc-button__outline {
+          border-color: #7d00fa !important;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.5;
+
+        .mdc-button__outline {
+          border-color: #e5e7eb !important;
+        }
+      }
+    }
+
+    .step-btn-primary.mat-mdc-unelevated-button {
+      --mdc-filled-button-container-color: #7d00fa;
+      --mdc-filled-button-label-text-color: #fff;
+      border: 1.5px solid #6b00d4 !important;
+      box-shadow: 0 1px 3px rgba(107, 0, 212, 0.2) !important;
+
+      &:not(:disabled):hover {
+        --mdc-filled-button-container-color: #6b00d4;
+        border-color: #5a00b3 !important;
+        box-shadow: 0 3px 8px rgba(107, 0, 212, 0.28) !important;
+      }
+
+      &:disabled {
+        --mdc-filled-button-container-color: #e5e7eb;
+        --mdc-filled-button-label-text-color: #9ca3af;
+        border: 1.5px solid #d1d5db !important;
+        box-shadow: none !important;
+        opacity: 1;
+      }
+    }
+
+    .step-btn-pay {
+      min-width: 180px !important;
+    }
+  }
+}

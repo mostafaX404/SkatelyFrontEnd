@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
@@ -9,7 +10,7 @@ import { CurrencyPipe, Location } from '@angular/common';
 @Component({
   selector: 'app-order-summary',
   standalone: true,
-  imports: [MatButtonModule, RouterLink, MatFormFieldModule, MatLabel, MatInputModule, CurrencyPipe],
+  imports: [MatButtonModule, MatIconModule, RouterLink, MatFormFieldModule, MatLabel, MatInputModule, CurrencyPipe],
   templateUrl: './order-summary.component.html',
   styleUrl: './order-summary.component.scss'
 })
