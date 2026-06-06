@@ -15,6 +15,8 @@ import { CheckoutReview } from "./checkout-review/checkout-review";
 import { CurrencyPipe, JsonPipe } from '@angular/common'; // تم إضافة JsonPipe لعرض حالة الاكتمال في pre
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order-service';
 import { SignalrService } from '../../core/services/signalr-service';
@@ -29,7 +31,9 @@ import { SignalrService } from '../../core/services/signalr-service';
     CheckoutReview,
     CurrencyPipe,
     JsonPipe,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatButton,
+    RouterLink
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'

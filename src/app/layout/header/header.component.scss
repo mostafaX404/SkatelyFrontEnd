@@ -1,5 +1,13 @@
 a {
-    &.active {
-        color: #7d00fa;
-    }
+  color: #4b5563;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #7d00fa;
+  }
+
+  &.active {
+    color: #7d00fa;
+    font-weight: 600;
+  }
 }
