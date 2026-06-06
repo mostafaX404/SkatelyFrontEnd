@@ -23,12 +23,32 @@ import { CardPipe } from '../../../shared/pipes/card-pipe';
   styleUrl: './checkout-success.scss',
 })
 export class CheckoutSuccess {
-  
+
   signalrService = inject(SignalrService);
   private orderService = inject(OrderService);
 
+  ngOnInit(): void {
+    if (this.signalrService.orderSignal()) {
+      return;
+    }
+
+    if (this.orderService.completedOrder) {
+      this.signalrService.orderSignal.set(this.orderService.completedOrder);
+      return;
+    }
+
+    const orderId = this.orderService.completedOrderId;
+    if (orderId) {
+      this.orderService.getOrderDetailed(orderId).subscribe({
+        next: order => this.signalrService.orderSignal.set(order)
+      });
+    }
+  }
+
   ngOnDestroy(): void {
     this.orderService.orderComplete = false;
+    this.orderService.completedOrder = null;
+    this.orderService.completedOrderId = null;
     this.signalrService.orderSignal.set(null);
   }
 }

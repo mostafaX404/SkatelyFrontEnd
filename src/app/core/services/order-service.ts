@@ -8,7 +8,9 @@ import { Order, OrderToCreate } from '../../shared/models/order';
 export class OrderService {
   baseUrl = 'https://localhost:5001/api/'
   private http = inject(HttpClient);
-  orderComplete = false ;
+  orderComplete = false;
+  completedOrder: Order | null = null;
+  completedOrderId: number | null = null;
 
   createOrder(orderToCreate: OrderToCreate) {
     return this.http.post<Order>(this.baseUrl + 'order', orderToCreate);

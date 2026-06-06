@@ -4,7 +4,7 @@ export type User = {
     lastName: string;
     email: string;
     address: Address
-
+    role : string | string[];
 
 }
 

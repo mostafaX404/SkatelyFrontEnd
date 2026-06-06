@@ -18,7 +18,7 @@ export class StripeService {
   private stripePromise: Promise<Stripe | null>;
   private elements?: StripeElements;
   private addressElement?: StripeAddressElement;
-private paymentElement?: StripePaymentElement
+  private paymentElement?: StripePaymentElement
 
   constructor() {
     this.stripePromise = loadStripe(environment.StripePublicKey);
@@ -42,6 +42,19 @@ private paymentElement?: StripePaymentElement
       }
     }
     return this.elements;
+  }
+
+
+async createPaymentElement() {
+    if (!this.paymentElement) {
+      const elements = await this.initializeElements();
+      if (elements) {
+        this.paymentElement = elements.create('payment');
+      } else {
+        throw new Error('Elements instance has not been initialised');
+      }
+    }
+    return this.paymentElement;
   }
 
   async createAddressElement() {
@@ -128,23 +141,11 @@ async confirmPayment(confirmationToken: ConfirmationToken) {
     if (!cart ) throw new Error('Problem with cart');
 
     return this.http.post<Cart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
-      map(cart => {
-        this.cartService.cart.set(cart);
+      map(async cart => {
+       await firstValueFrom(this.cartService.setCart(cart));
         return cart;
       })
-    );
-  }
-
-async createPaymentElement() {
-    if (!this.paymentElement) {
-      const elements = await this.initializeElements();
-      if (elements) {
-        this.paymentElement = elements.create('payment');
-      } else {
-        throw new Error('Elements instance has not been initialized');
-      }
-    }
-    return this.paymentElement;
+    )
   }
 
 

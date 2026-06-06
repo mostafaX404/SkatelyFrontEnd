@@ -76,7 +76,7 @@ updateCart() {
     this.cartService.addItemToCart(this.product, diff);
   } 
   else if (diff < 0) {
-    this.cartService.removeItemFromCart(this.product.id, Math.abs(diff));
+    this.cartService.asyncremoveItemFromCart(this.product.id, Math.abs(diff));
   }
 
   this.quantityInCart = this.quantity;

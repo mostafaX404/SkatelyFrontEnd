@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order-service';
+import { SignalrService } from '../../core/services/signalr-service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -40,6 +41,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private snackbar = inject(SnackbarService);
   private accountService = inject(AccountService)
   private orderService = inject(OrderService)
+  private signalrService = inject(SignalrService);
   cartService = inject(CartService);
   private router = inject(Router)
   loading? = false;
@@ -135,6 +137,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   async confirmPayment(stepper: MatStepper) {
     this.loading = true;
+    this.signalrService.createHubConnection();
     try {
       if (this.confirmationToken) {
         const result = await this.stripeService.confirmPayment(this.confirmationToken);
@@ -144,7 +147,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           const orderResult = await firstValueFrom(this.orderService.createOrder(order));
 
           if (orderResult) {
-            this.orderService.orderComplete = true ;
+            this.orderService.orderComplete = true;
+            this.orderService.completedOrder = orderResult;
+            this.orderService.completedOrderId = orderResult.id;
+            this.signalrService.orderSignal.set(orderResult);
             this.cartService.deleteCart();
             this.cartService.selectedDelivery.set(null);
             this.router.navigateByUrl('/checkout/success');

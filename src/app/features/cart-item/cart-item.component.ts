@@ -24,13 +24,13 @@ export class CartItemComponent {
   }
 
   decrementQuantity() {
-    this.cartService.removeItemFromCart(this.item().productId)
+    this.cartService.asyncremoveItemFromCart(this.item().productId)
 
   }
 
 
   removeItemFromCart() {
-    this.cartService.removeItemFromCart(this.item().productId, this.item().quantity)
+    this.cartService.asyncremoveItemFromCart(this.item().productId, this.item().quantity)
   }
 
 }

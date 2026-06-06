@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Cart, CartItem } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
 import { environment } from '../../../environments/environments';
-import { map } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { DeliveryMethod } from '../../shared/models/deliveryMethods';
 
 
@@ -50,17 +50,16 @@ totals = computed(() => {
 
   setCart(cart: Cart) {
     console.log('Sending cart', cart);
-
-    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({
-      next: (cart) => {
+    return this.http.post<Cart>(this.baseUrl + 'cart', cart).pipe(
+      tap(cart => {
         console.log('Returned cart', cart);
         this.cart.set(cart);
-      },
-    });
+      })
+    )
   }
 
 
-  addItemToCart(item: CartItem | Product, quantity = 1) {
+  async addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart();
     if (this.isProduct(item)) {
       item = this.mapProudctToCartItem(item);
@@ -72,11 +71,11 @@ totals = computed(() => {
       items: updatedItems
     };
 
-    this.setCart(updatedCart);
+    await firstValueFrom(this.setCart(updatedCart));
     console.log(cart)
   }
 
-  removeItemFromCart(productId: number, quantity = 1) {
+  async asyncremoveItemFromCart(productId: number, quantity = 1) {
     const cart = this.cart();
     if (!cart) return;
 
@@ -92,7 +91,7 @@ totals = computed(() => {
     if (cart.items.length === 0) {
       this.deleteCart();
     } else {
-      this.setCart(cart);
+      await firstValueFrom(this.setCart(cart));
     }
   }
 

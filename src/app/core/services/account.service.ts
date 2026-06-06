@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Inject, Injectable, signal } from '@angular/core';
 import { Address, User } from '../../shared/models/user';
 import { map, tap } from 'rxjs';
 import { SignalrService } from './signalr-service';
@@ -15,6 +15,12 @@ export class AccountService {
   private http = inject(HttpClient);
   private signalrService = inject(SignalrService)
   currentUser = signal<User | null>(null);
+  
+  isAdmin = computed(()=>{
+    const roles = this.currentUser()?.role ; 
+    return Array.isArray(roles) ? roles.includes("Admin") : roles == "Admin";
+  })
+
 
 login(values: any) {
   let params = new HttpParams();

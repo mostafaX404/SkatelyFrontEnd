@@ -12,19 +12,23 @@ export class SignalrService {
   orderSignal = signal<Order | null>(null);
 
   createHubConnection() {
-    this.hubConnection = new HubConnectionBuilder()
-      .withUrl(this.hubUrl, {
-        withCredentials: true
-      })
-      .withAutomaticReconnect()
-      .build();
+    if (!this.hubConnection) {
+      this.hubConnection = new HubConnectionBuilder()
+        .withUrl(this.hubUrl, {
+          withCredentials: true
+        })
+        .withAutomaticReconnect()
+        .build();
 
-    this.hubConnection.start()
-      .catch((error: any) => console.log(error));
+      this.hubConnection.on('OrderCompleteNotification', (order: Order) => {
+        this.orderSignal.set(order);
+      });
+    }
 
-    this.hubConnection.on('OrderCompleteNotification', (order: Order) => {
-      this.orderSignal.set(order);
-    });
+    if (this.hubConnection.state === HubConnectionState.Disconnected) {
+      this.hubConnection.start()
+        .catch((error: any) => console.log(error));
+    }
   }
 
   stopHubConnection() {
